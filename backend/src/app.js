@@ -1,5 +1,8 @@
 const express = require('express');
-const { productsRoutes } = require('./routes');
+const { 
+  productsRoutes,
+  salesRoutes,
+} = require('./routes');
 
 const app = express();
 require('express-async-errors');
@@ -11,5 +14,6 @@ app.get('/', (_request, response) => {
   response.json({ status: 'Store Manager UP!' });
 });
 app.use('/products', productsRoutes);
+app.use('/sales', salesRoutes);
 
 module.exports = app;
