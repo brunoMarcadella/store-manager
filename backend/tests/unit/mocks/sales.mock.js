@@ -69,6 +69,31 @@ const saleFromServiceNotFound = {
   data: { message: 'Sale not found' }, 
 };
 
+const saleIdFromDB = { insertId: 3 };
+
+const saleIdFromModel = 3;
+
+const registerSalesBody = [
+  {
+    productId: 1,
+    quantity: 1,
+  },
+  {
+    productId: 2,
+    quantity: 5,
+  },
+];
+
+const registeredSaleFromModel = {
+  id: saleIdFromModel,
+  itemsSold: registerSalesBody,
+};
+
+const registerFromServiceCreated = {
+  status: 'CREATED',
+  data: registeredSaleFromModel,
+};
+
 module.exports = {
   salesFromDB,
   salesFromModel,
@@ -77,4 +102,9 @@ module.exports = {
   salesFromServiceSuccessful,
   saleFromServiceSuccessful,
   saleFromServiceNotFound,
+  saleIdFromDB,
+  saleIdFromModel,
+  registerSalesBody,
+  registeredSaleFromModel,
+  registerFromServiceCreated,
 };

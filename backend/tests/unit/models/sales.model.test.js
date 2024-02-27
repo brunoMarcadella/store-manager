@@ -7,6 +7,8 @@ const {
   salesFromModel,
   saleFromDB,
   saleFromModel,
+  saleIdFromDB,
+  saleIdFromModel,
 } = require('../mocks/sales.mock');
 
 describe('Realizando testes - SALES MODEL:', function () {
@@ -26,6 +28,22 @@ describe('Realizando testes - SALES MODEL:', function () {
     const sale = await salesModel.findById(inputData);
     expect(sale).to.be.an('array');
     expect(sale).to.be.deep.equal(saleFromModel);
+  });
+
+  it('Cadastrar vendas com sucesso', async function () {
+    sinon.stub(connection, 'execute')
+      .onFirstCall()
+      .resolves([saleIdFromDB])
+      .onSecondCall()
+      .resolves();
+
+    const inputData = {
+      productId: 1,
+      quantity: 1,
+    };
+    const insertId = await salesModel.insertSalesTable();
+    await salesModel.insertSalesProductsTable(insertId, inputData);
+    expect(insertId).to.equal(saleIdFromModel);
   });
 
   afterEach(function () {
