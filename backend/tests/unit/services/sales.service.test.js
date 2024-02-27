@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { salesModel } = require('../../../src/models');
+const { salesModel, productsModel } = require('../../../src/models');
 const { salesService } = require('../../../src/services');
 const {
   salesFromModel,
@@ -8,6 +8,7 @@ const {
   saleIdFromModel,
   registeredSaleFromModel,
 } = require('../mocks/sales.mock');
+const { productFromModel } = require('../mocks/products.mock');
 
 describe('Realizando testes - SALES SERVICE:', function () {
   it('Listar todas as vendas com sucesso', async function () {
@@ -70,6 +71,7 @@ describe('Realizando testes - SALES SERVICE:', function () {
   });
 
   it('Cadastrar vendas com sucesso', async function () {
+    sinon.stub(productsModel, 'findById').resolves(productFromModel);
     sinon.stub(salesModel, 'insertSalesTable').resolves(saleIdFromModel);
     sinon.stub(salesModel, 'insertSalesProductsTable').resolves();
 
@@ -88,6 +90,25 @@ describe('Realizando testes - SALES SERVICE:', function () {
     expect(responseService.status).to.be.equal('CREATED');
     expect(responseService.data).to.be.an('object');
     expect(responseService.data).to.be.deep.equal(registeredSaleFromModel);
+  });
+
+  it('Não cadastrar vendas com o campo quantity menor ou igual a zero', async function () {
+    sinon.stub(productsModel, 'findById').resolves(productFromModel);
+    const inputData = [
+      {
+        productId: 1,
+        quantity: 0,
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ];
+
+    const responseService = await salesService.registerSale(inputData);
+
+    expect(responseService.status).to.be.equal('INVALID_VALUE');
+    expect(responseService.data.message).to.be.equal('"quantity" must be greater than or equal to 1');
   });
 
   afterEach(function () {

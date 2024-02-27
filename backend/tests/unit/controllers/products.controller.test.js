@@ -31,7 +31,7 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     expect(res.json).to.have.been.calledWith(productsFromModel);
   });
 
-  it('Listar produto pelo id com sucesso - satus 200', async function () {
+  it('Listar produto pelo id com sucesso - status 200', async function () {
     sinon.stub(productsService, 'findById').resolves(productFromServiceSuccessful);
 
     const req = { params: { id: 1 }, body: { } };
@@ -46,7 +46,7 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     expect(res.json).to.have.been.calledWith(productFromModel);
   });
 
-  it('Não listar produto com id inexistente - satus 404', async function () {
+  it('Não listar produto com id inexistente - status 404', async function () {
     sinon.stub(productsService, 'findById').resolves(productFromServiceNotFound);
 
     const req = { params: { id: 99999 }, body: { } };
@@ -73,6 +73,19 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     await productsController.createProduct(req, res);
     expect(res.status).to.have.been.calledWith(201);
     expect(res.json).to.have.been.calledWith(productFromModel);
+  });
+
+  it('Não insere produto com name menor que 5 caracteres - status 422', async function () {
+    const req = { params: { }, body: { name: 'Pro' } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.createProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(422);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
   });
 
   afterEach(function () {

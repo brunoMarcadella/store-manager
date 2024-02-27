@@ -6,9 +6,14 @@ const addProductSchema = Joi.object({
   name: Joi.string().min(5),
 });
 
+const registerSalesSchema = Joi.object({
+  productId: idSchema,
+  quantity: Joi.number().integer().min(1),
+});
+
 module.exports = {
-  idSchema,
   addProductSchema,
+  registerSalesSchema,
 };
 
 // const pointSchema = Joi.string().min(3);

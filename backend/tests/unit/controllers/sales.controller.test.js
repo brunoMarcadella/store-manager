@@ -13,6 +13,8 @@ const {
   registerSalesBody,
   registeredSaleFromModel,
 } = require('../mocks/sales.mock');
+const { productsModel } = require('../../../src/models');
+const { productFromModel } = require('../mocks/products.mock');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -66,7 +68,7 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
   it('Cadastrar vendas com sucesso - status 201', async function () {
     sinon.stub(salesService, 'registerSale').resolves(registerFromServiceCreated);
 
-    const req = { params: { }, body: registerSalesBody };
+    const req = { body: registerSalesBody };
     const res = {
       status: sinon.stub().returnsThis(),
       json: sinon.stub(),
@@ -76,6 +78,30 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
 
     expect(res.status).to.have.been.calledWith(201);
     expect(res.json).to.have.been.calledWith(registeredSaleFromModel);
+  });
+
+  it('Não cadastrar vendas com o campo quantity menor ou igual a zero - status 422', async function () {
+    sinon.stub(productsModel, 'findById').resolves(productFromModel);
+    const req = { body: [
+      {
+        productId: 1,
+        quantity: 0,
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ],
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+   
+    await salesController.registerSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(422);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
   });
 
   afterEach(function () {

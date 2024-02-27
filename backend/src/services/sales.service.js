@@ -1,4 +1,5 @@
 const { salesModel } = require('../models');
+const schema = require('./validations/validationsInputValues');
 
 const findAll = async () => {
   const sales = await salesModel.findAll();
@@ -14,6 +15,17 @@ const findById = async (saleId) => {
 };
 
 const registerSale = async (salesData) => {
+  const validations = salesData.map(async (sale) => {
+    const error = await schema.validateNewRegisterSales(sale);
+    return error;
+  });
+  const errors = await Promise.all(validations);
+  for (let index = 0; index < errors.length; index += 1) {
+    if (errors[index] !== undefined) {
+      return { status: errors[index].status, data: { message: errors[index].message } };
+    } 
+  }
+
   const insertId = await salesModel.insertSalesTable();
   const resultados = salesData.map((sale) => salesModel.insertSalesProductsTable(insertId, sale));
   Promise.all(resultados);
