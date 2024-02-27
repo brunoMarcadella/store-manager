@@ -1,11 +1,11 @@
 const express = require('express');
+require('express-async-errors');
 const { 
   productsRoutes,
   salesRoutes,
 } = require('./routes');
 
 const app = express();
-require('express-async-errors');
 
 app.use(express.json());
 
