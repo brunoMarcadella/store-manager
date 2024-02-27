@@ -9,6 +9,7 @@ const {
   productsFromServiceSuccessful,
   productFromServiceSuccessful,
   productFromServiceNotFound,
+  productFromServiceCreated,
 } = require('../mocks/products.mock');
 
 const { expect } = chai;
@@ -58,6 +59,20 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
 
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Inserindo produto com sucesso - status 201', async function () {
+    sinon.stub(productsService, 'createProduct').resolves(productFromServiceCreated);
+
+    const req = { params: { }, body: { name: 'ProdutoX' } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.createProduct(req, res);
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith(productFromModel);
   });
 
   afterEach(function () {
