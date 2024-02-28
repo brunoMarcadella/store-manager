@@ -24,8 +24,19 @@ const createProduct = async (productData) => {
   return { status: 'CREATED', data: newProduct };
 };
 
+const update = async (productId, productData) => {
+  const object = { productId, productData };
+  const error = await schema.validateUpdateProduct(object);
+  if (error) return { status: error.status, data: { message: error.message } };
+
+  await productsModel.update(productId, productData);
+  const updatedProduct = await productsModel.findById(productId);
+  return { status: 'SUCCESSFUL', data: updatedProduct };
+};
+
 module.exports = {
   findAll,
   findById,
   createProduct,
+  update,
 };

@@ -59,6 +59,29 @@ const productFromServiceCreated = {
   data: productFromModel,
 };
 
+const updatedProduct = {
+  id: 1,
+  name: 'Martelo do Batman',
+};
+
+const updateProductFromServiceSuccessful = {
+  status: 'SUCCESSFUL',
+  data: updatedProduct,
+};
+
+const returnFromDB = [
+  {
+    fieldCount: 0,
+    affectedRows: 1,
+    insertId: 0,
+    info: 'Rows matched: 1  Changed: 1  Warnings: 0',
+    serverStatus: 2,
+    warningStatus: 0,
+    changedRows: 1,
+  },
+  undefined,
+];
+
 module.exports = {
   productsFromDB,
   productsFromModel,
@@ -71,4 +94,7 @@ module.exports = {
   productIdFromModel,
   newProductFromModel,
   productFromServiceCreated,
+  updatedProduct,
+  updateProductFromServiceSuccessful,
+  returnFromDB,
 };

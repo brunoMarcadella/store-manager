@@ -10,6 +10,8 @@ const {
   productFromServiceSuccessful,
   productFromServiceNotFound,
   productFromServiceCreated,
+  updateProductFromServiceSuccessful,
+  updatedProduct,
 } = require('../mocks/products.mock');
 
 const { expect } = chai;
@@ -85,6 +87,34 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     await productsController.createProduct(req, res);
 
     expect(res.status).to.have.been.calledWith(422);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Produto é atualizado com suceso - status 200', async function () {
+    sinon.stub(productsService, 'update').resolves(updateProductFromServiceSuccessful);
+    const req = { params: { id: 1 }, body: { name: 'Martelo do Batman' } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.update(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(updatedProduct);
+  });
+
+  it('Produto não é atualizado com productId inexistente - status 404', async function () {
+    sinon.stub(productsService, 'update').resolves(productFromServiceNotFound);
+    const req = { params: { id: 9999 }, body: { name: 'Martelo do Batman' } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.update(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
   });
 

@@ -1,3 +1,4 @@
+const { getFormattedUpdateColumns } = require('../utils/generateFormattedQuery');
 const connection = require('./connection');
 
 const findAll = async () => {
@@ -21,8 +22,15 @@ const insert = async (product) => {
   return insertId;
 };
 
+const update = async (productId, productData) => {
+  const columns = getFormattedUpdateColumns(productData);
+  const query = `UPDATE products SET ${columns} WHERE id = ?`;
+  return connection.execute(query, [...Object.values(productData), productId]);
+};
+
 module.exports = {
   findAll,
   findById,
   insert,
+  update,
 };

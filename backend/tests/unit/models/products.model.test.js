@@ -9,6 +9,7 @@ const {
   productFromModel,
   productIdFromDB,
   productIdFromModel,
+  returnFromDB,
 } = require('../mocks/products.mock');
 
 describe('Realizando testes - PRODUCTS MODEL:', function () {
@@ -36,6 +37,17 @@ describe('Realizando testes - PRODUCTS MODEL:', function () {
     const inputData = { name: 'ProdutoX' };
     const result = await productsModel.insert(inputData);
     expect(result).to.equal(productIdFromModel);
+  });
+
+  it('Produto é atualizado com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves(returnFromDB);
+
+    const inputId = 1;
+    const inputData = { name: 'Martelo do Batman' };
+    const result = await productsModel.update(inputId, inputData);
+    
+    expect(result[0].affectedRows).to.be.equal(1);
+    expect(result[0].changedRows).to.be.equal(1);
   });
 
   afterEach(function () {
