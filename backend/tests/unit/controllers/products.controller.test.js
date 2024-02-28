@@ -91,7 +91,7 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
   });
 
-  it('Produto é atualizado com suceso - status 200', async function () {
+  it('Produto é atualizado com sucesso - status 200', async function () {
     sinon.stub(productsService, 'update').resolves(updateProductFromServiceSuccessful);
     const req = { params: { id: 1 }, body: { name: 'Martelo do Batman' } };
     const res = {

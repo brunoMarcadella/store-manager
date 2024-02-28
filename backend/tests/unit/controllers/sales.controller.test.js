@@ -13,6 +13,11 @@ const {
   registerSalesBody,
   registeredSaleFromModel,
   deleteSaleSuccessful,
+  updateQuantityProductSuccessful,
+  updatedProductData,
+  updateQuantityProductIdNotFound,
+  updateQuantitySaleIdNotFound,
+  updateQuantityInvalidValue,
 } = require('../mocks/sales.mock');
 const { productsModel } = require('../../../src/models');
 const { productFromModel } = require('../mocks/products.mock');
@@ -127,6 +132,62 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
     };
 
     await salesController.deleteSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Quantidade do produto é atualizado com sucesso - status 200', async function () {
+    sinon.stub(salesService, 'updateProductQuantity').resolves(updateQuantityProductSuccessful);
+    const req = { params: { saleId: 1, productId: 2 }, body: { quantity: 10 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.updateProductQuantity(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(updatedProductData);
+  });
+
+  it('Produto não é atualizado com quantity menor que 1 - status 422', async function () {
+    sinon.stub(salesService, 'updateProductQuantity').resolves(updateQuantityInvalidValue);
+    const req = { params: { saleId: 1, productId: 2 }, body: { quantity: 0 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.updateProductQuantity(req, res);
+
+    expect(res.status).to.have.been.calledWith(422);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Produto não é atualizado com productId inexistente - status 404', async function () {
+    sinon.stub(salesService, 'updateProductQuantity').resolves(updateQuantityProductIdNotFound);
+    const req = { params: { saleId: 1, productId: 200 }, body: { quantity: 10 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.updateProductQuantity(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Produto não é atualizado com saleId inexistente - status 404', async function () {
+    sinon.stub(salesService, 'updateProductQuantity').resolves(updateQuantitySaleIdNotFound);
+    const req = { params: { saleId: 100, productId: 2 }, body: { quantity: 10 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.updateProductQuantity(req, res);
 
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));

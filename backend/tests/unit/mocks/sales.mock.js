@@ -41,6 +41,12 @@ const saleFromDB = [
   },
 ];
 
+const saleFromSalesProducts = {
+  saleId: 1,
+  productId: 1,
+  quantity: 5,
+};
+
 const saleFromModel = [
   {
     date: '2021-09-09T04:54:29.000Z',
@@ -109,6 +115,28 @@ const returnFromDB = [
   undefined,
 ];
 
+const updatedProductData = {
+  date: '2023-05-06T03:14:28.000Z',
+  productId: 2,
+  quantity: 20,
+  saleId: 1,
+};
+
+const updateQuantityProductSuccessful = { status: 'SUCCESSFUL',
+  data: updatedProductData };
+
+const updateQuantityInvalidValue = { 
+  status: 'INVALID_VALUE',
+  data: { message: '"quantity" must be greater than or equal to 1' } };
+
+const updateQuantityProductIdNotFound = { 
+  status: 'NOT_FOUND',
+  data: { message: 'Product not found in sale' } };
+
+const updateQuantitySaleIdNotFound = { 
+  status: 'NOT_FOUND',
+  data: { message: 'Sale not found' } };
+
 module.exports = {
   salesFromDB,
   salesFromModel,
@@ -124,4 +152,10 @@ module.exports = {
   registerFromServiceCreated,
   deleteSaleSuccessful,
   returnFromDB,
+  updatedProductData,
+  updateQuantityProductSuccessful,
+  updateQuantityProductIdNotFound,
+  updateQuantitySaleIdNotFound,
+  updateQuantityInvalidValue,
+  saleFromSalesProducts,
 };

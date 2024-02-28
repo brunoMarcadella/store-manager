@@ -23,13 +23,21 @@ const validateUpdateProduct = async (keysObjectToValidate) => {
   if (!product) return { status: 'NOT_FOUND', message: 'Product not found' };
 };
 
+const validateUpdateQuantity = async (keysObjectToValidate) => {
+  const { error } = registerSalesSchema.validate(keysObjectToValidate.updateQuantity);
+  if (error) return { status: 'INVALID_VALUE', message: error.message };
+  const sale = await productsModel.findSaleByIdInSalesProduct(keysObjectToValidate.saleId);
+  if (!sale) return { status: 'NOT_FOUND', message: 'Sale not found' };
+  const product = await productsModel.findProductByIdInSalesProduct(
+    keysObjectToValidate.saleId,
+    keysObjectToValidate.productId,
+  );
+  if (!product) return { status: 'NOT_FOUND', message: 'Product not found in sale' };
+};
+
 module.exports = {
   validateNewProduct,
   validateNewRegisterSales,
   validateUpdateProduct,
+  validateUpdateQuantity,
 };
-
-// const validateRequestTravel = (keysObjectToValidate) => {
-//   const { error } = addRequestTravelSchema.validate(keysObjectToValidate);
-//   if (error) return { status: 'INVALID_VALUE', message: error.message };
-// };

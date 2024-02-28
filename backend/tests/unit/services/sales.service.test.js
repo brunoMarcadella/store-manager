@@ -8,6 +8,7 @@ const {
   saleIdFromModel,
   registeredSaleFromModel,
   saleFromDB,
+  updatedProductData,
 } = require('../mocks/sales.mock');
 const { productFromModel } = require('../mocks/products.mock');
 
@@ -130,6 +131,55 @@ describe('Realizando testes - SALES SERVICE:', function () {
     expect(responseService.status).to.be.equal('NOT_FOUND');
     expect(responseService.data.message).to.be.a('string');
     expect(responseService.data.message).to.be.equal('Sale not found');
+  });
+
+  it('Quantidade do produto é atualizada com sucesso', async function () {
+    sinon.stub(productsModel, 'findSaleByIdInSalesProduct').resolves('finded');
+    sinon.stub(productsModel, 'findProductByIdInSalesProduct').resolves('finded');
+    sinon.stub(salesModel, 'updateProductQuantity').resolves();
+    sinon.stub(productsModel, 'findProductWithDate').resolves(updatedProductData);
+
+    const saleId = 1;
+    const productId = 2;
+    const inputData = { quantity: 10 };
+    const responseService = await salesService.updateProductQuantity(saleId, productId, inputData);
+
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.an('object');
+    expect(responseService.data).to.be.deep.equal(updatedProductData);
+  });
+
+  it('Não atualiza quantidade do produto com quantity menor que 1', async function () {
+    const saleId = 1;
+    const productId = 2;
+    const inputData = { quantity: 0 };
+    const responseService = await salesService.updateProductQuantity(saleId, productId, inputData);
+
+    expect(responseService.status).to.be.equal('INVALID_VALUE');
+    expect(responseService.data.message).to.be.equal('"quantity" must be greater than or equal to 1');
+  });
+
+  it('Produto não é atualizado com saleId inexistente', async function () {
+    sinon.stub(productsModel, 'findSaleByIdInSalesProduct').resolves(undefined);
+    const saleId = 1000;
+    const productId = 2;
+    const inputData = { quantity: 10 };
+    const responseService = await salesService.updateProductQuantity(saleId, productId, inputData);
+
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data.message).to.be.equal('Sale not found');
+  });
+
+  it('Produto não é atualizado com productId inexistente', async function () {
+    sinon.stub(productsModel, 'findSaleByIdInSalesProduct').resolves('ok');
+    sinon.stub(productsModel, 'findProductByIdInSalesProduct').resolves(undefined);
+    const saleId = 1;
+    const productId = 2000;
+    const inputData = { quantity: 10 };
+    const responseService = await salesService.updateProductQuantity(saleId, productId, inputData);
+
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data.message).to.be.equal('Product not found in sale');
   });
 
   afterEach(function () {

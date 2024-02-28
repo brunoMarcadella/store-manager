@@ -1,4 +1,4 @@
-const { salesModel } = require('../models');
+const { salesModel, productsModel } = require('../models');
 const schema = require('./validations/validationsInputValues');
 
 const findAll = async () => {
@@ -46,9 +46,20 @@ const deleteSale = async (saleId) => {
   return { status: 'NO_CONTENT', data: {} };
 };
 
+const updateProductQuantity = async (saleId, productId, updateQuantity) => {
+  const object = { saleId, productId, updateQuantity };
+  const error = await schema.validateUpdateQuantity(object);
+  if (error) return { status: error.status, data: { message: error.message } };
+
+  await salesModel.updateProductQuantity(saleId, productId, updateQuantity.quantity);
+  const updatedProduct = await productsModel.findProductWithDate(saleId, productId);
+  return { status: 'SUCCESSFUL', data: updatedProduct };
+};
+
 module.exports = {
   findAll,
   findById,
   registerSale,
   deleteSale,
+  updateProductQuantity,
 };

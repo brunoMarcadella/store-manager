@@ -1,3 +1,4 @@
+const camelize = require('camelize');
 const { getFormattedUpdateColumns } = require('../utils/generateFormattedQuery');
 const connection = require('./connection');
 
@@ -33,10 +34,38 @@ const deleteProduct = async (productId) => connection.execute(
   [productId],
 );
 
+const findProductByIdInSalesProduct = async (saleId, productId) => {
+  const [[product]] = await connection.execute(`SELECT * FROM sales_products 
+     WHERE (sale_id = ?
+     AND product_id = ?)`, [saleId, productId]);
+  return product;
+};
+
+const findSaleByIdInSalesProduct = async (saleId) => {
+  const [[sale]] = await connection.execute(`SELECT * FROM sales_products 
+     WHERE sale_id = ?`, [saleId]);
+  return camelize(sale);
+};
+
+const findProductWithDate = async (saleId, productId) => {
+  const [[product]] = await connection.execute(`SELECT 
+      sa.date,
+      sapro.product_id AS 'productId',
+      sapro.quantity,
+      sapro.sale_id AS 'saleId' FROM sales_products AS sapro
+     INNER JOIN sales AS sa ON sapro.sale_id = sa.id 
+     WHERE (sale_id = ?
+     AND product_id = ?)`, [saleId, productId]);
+  return product;
+};
+
 module.exports = {
   findAll,
   findById,
   insert,
   update,
   deleteProduct,
+  findProductByIdInSalesProduct,
+  findSaleByIdInSalesProduct,
+  findProductWithDate,
 };
