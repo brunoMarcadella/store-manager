@@ -12,6 +12,7 @@ const {
   registerFromServiceCreated,
   registerSalesBody,
   registeredSaleFromModel,
+  deleteSaleSuccessful,
 } = require('../mocks/sales.mock');
 const { productsModel } = require('../../../src/models');
 const { productFromModel } = require('../mocks/products.mock');
@@ -101,6 +102,33 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
     await salesController.registerSale(req, res);
 
     expect(res.status).to.have.been.calledWith(422);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Venda é deletada com sucesso - status 204', async function () {
+    sinon.stub(salesService, 'deleteSale').resolves(deleteSaleSuccessful);
+    const req = { params: { id: 1 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.deleteSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(204);
+  });
+
+  it('Venda com id inexistente não é deletada - status 404', async function () {
+    sinon.stub(salesService, 'deleteSale').resolves(saleFromServiceNotFound);
+    const req = { params: { id: 9999 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.deleteSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
   });
 

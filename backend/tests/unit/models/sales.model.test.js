@@ -9,6 +9,7 @@ const {
   saleFromModel,
   saleIdFromDB,
   saleIdFromModel,
+  returnFromDB,
 } = require('../mocks/sales.mock');
 
 describe('Realizando testes - SALES MODEL:', function () {
@@ -44,6 +45,16 @@ describe('Realizando testes - SALES MODEL:', function () {
     const insertId = await salesModel.insertSalesTable();
     await salesModel.insertSalesProductsTable(insertId, inputData);
     expect(insertId).to.equal(saleIdFromModel);
+  });
+
+  it('Venda é deletada com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves(returnFromDB);
+
+    const inputId = 1;
+    const result = await salesModel.deleteSale(inputId);
+
+    expect(result[0].affectedRows).to.be.equal(1);
+    expect(result[0].changedRows).to.be.equal(1);
   });
 
   afterEach(function () {

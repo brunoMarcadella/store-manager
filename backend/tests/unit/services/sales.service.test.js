@@ -7,6 +7,7 @@ const {
   saleFromModel,
   saleIdFromModel,
   registeredSaleFromModel,
+  saleFromDB,
 } = require('../mocks/sales.mock');
 const { productFromModel } = require('../mocks/products.mock');
 
@@ -109,6 +110,26 @@ describe('Realizando testes - SALES SERVICE:', function () {
 
     expect(responseService.status).to.be.equal('INVALID_VALUE');
     expect(responseService.data.message).to.be.equal('"quantity" must be greater than or equal to 1');
+  });
+
+  it('Venda é deletada com sucesso', async function () {
+    sinon.stub(salesModel, 'findById').resolves(saleFromDB);
+    sinon.stub(salesModel, 'deleteSale').resolves();
+    const inputId = 1;
+    const responseService = await salesService.deleteSale(inputId);
+
+    expect(responseService.status).to.be.equal('NO_CONTENT');
+  });
+
+  it('Venda com id inexistente não é deletada', async function () {
+    sinon.stub(salesModel, 'findById').resolves([]);
+
+    const inputId = 9999;
+    const responseService = await salesService.deleteSale(inputId);
+
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data.message).to.be.a('string');
+    expect(responseService.data.message).to.be.equal('Sale not found');
   });
 
   afterEach(function () {
