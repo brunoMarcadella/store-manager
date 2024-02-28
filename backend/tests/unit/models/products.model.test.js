@@ -50,6 +50,16 @@ describe('Realizando testes - PRODUCTS MODEL:', function () {
     expect(result[0].changedRows).to.be.equal(1);
   });
 
+  it('Produto é deletado com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves(returnFromDB);
+
+    const inputId = 1;
+    const result = await productsModel.deleteProduct(inputId);
+
+    expect(result[0].affectedRows).to.be.equal(1);
+    expect(result[0].changedRows).to.be.equal(1);
+  });
+
   afterEach(function () {
     sinon.restore();
   });

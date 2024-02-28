@@ -82,6 +82,8 @@ const returnFromDB = [
   undefined,
 ];
 
+const deleteProductSuccessful = { status: 'NO_CONTENT', data: {} };
+
 module.exports = {
   productsFromDB,
   productsFromModel,
@@ -97,4 +99,5 @@ module.exports = {
   updatedProduct,
   updateProductFromServiceSuccessful,
   returnFromDB,
+  deleteProductSuccessful,
 };

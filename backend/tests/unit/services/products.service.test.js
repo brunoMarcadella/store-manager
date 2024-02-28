@@ -107,6 +107,26 @@ describe('Realizando testes - PRODUCTS SERVICE:', function () {
     expect(responseService.data.message).to.be.equal('"name" length must be at least 5 characters long');
   });
 
+  it('Produto é deletado com sucesso', async function () {
+    sinon.stub(productsModel, 'findById').resolves(productFromDB);
+    sinon.stub(productsModel, 'deleteProduct').resolves();
+    const inputId = 1;
+    const responseService = await productsService.deleteProduct(inputId);
+
+    expect(responseService.status).to.be.equal('NO_CONTENT');
+  });
+
+  it('Produto com id inexistente não é deletado', async function () {
+    sinon.stub(productsModel, 'findById').resolves(undefined);
+
+    const inputId = 9999;
+    const responseService = await productsService.deleteProduct(inputId);
+
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data.message).to.be.a('string');
+    expect(responseService.data.message).to.be.equal('Product not found');
+  });
+
   afterEach(function () {
     sinon.restore();
   });

@@ -12,6 +12,7 @@ const {
   productFromServiceCreated,
   updateProductFromServiceSuccessful,
   updatedProduct,
+  deleteProductSuccessful,
 } = require('../mocks/products.mock');
 
 const { expect } = chai;
@@ -113,6 +114,33 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     };
 
     await productsController.update(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
+  });
+
+  it('Produto é deletado com sucesso - status 204', async function () {
+    sinon.stub(productsService, 'deleteProduct').resolves(deleteProductSuccessful);
+    const req = { params: { id: 1 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.deleteProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(204);
+  });
+
+  it('Produto com id inexistente não é deletado - status 404', async function () {
+    sinon.stub(productsService, 'deleteProduct').resolves(productFromServiceNotFound);
+    const req = { params: { id: 9999 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.deleteProduct(req, res);
 
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
