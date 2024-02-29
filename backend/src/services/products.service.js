@@ -6,6 +6,11 @@ const findAll = async () => {
   return { status: 'SUCCESSFUL', data: products };
 };
 
+const findAllFiltered = async (filter) => {
+  const products = await productsModel.findAllFiltered(filter);
+  return { status: 'SUCCESSFUL', data: products };
+};
+
 const findById = async (productId) => {
   const product = await productsModel.findById(productId);
 
@@ -45,6 +50,7 @@ const deleteProduct = async (productId) => {
 
 module.exports = {
   findAll,
+  findAllFiltered,
   findById,
   createProduct,
   update,

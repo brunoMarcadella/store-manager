@@ -10,6 +10,23 @@ const findAll = async () => {
   return products;
 };
 
+const findAllFiltered = async (filter) => {
+  if (filter === undefined) {
+    const [products] = await connection.execute(
+      `SELECT * FROM products
+       ORDER BY id`,
+    );
+    return products;
+  }
+  const [products] = await connection.execute(
+    `SELECT * FROM products
+     WHERE name LIKE ?
+     ORDER BY id`,
+    [`%${filter}%`],
+  );
+  return products;
+};
+
 const findById = async (productId) => {
   const [[product]] = await connection.execute('SELECT * FROM products WHERE id = ?', [productId]);
   return product;
@@ -61,6 +78,7 @@ const findProductWithDate = async (saleId, productId) => {
 
 module.exports = {
   findAll,
+  findAllFiltered,
   findById,
   insert,
   update,

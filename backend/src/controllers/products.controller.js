@@ -6,6 +6,12 @@ const findAll = async (_req, res) => {
   return res.status(mapStatusHTTP(status)).json(data);
 };
 
+const findAllFiltered = async (req, res) => {
+  console.log(req);
+  const { status, data } = await productsService.findAllFiltered(req.query.q);
+  return res.status(mapStatusHTTP(status)).json(data);
+};
+
 const findById = async (req, res) => {
   const { id } = req.params;
   const { status, data } = await productsService.findById(id);
@@ -31,6 +37,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   findAll,
+  findAllFiltered,
   findById,
   createProduct,
   update,

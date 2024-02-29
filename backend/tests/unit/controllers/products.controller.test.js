@@ -146,6 +146,26 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     expect(res.json).to.have.been.calledWith(sinon.match.has('message'));
   });
 
+  it('Listar todos produtos filtrando pelo query com sucesso - status 200', async function () {
+    sinon.stub(productsService, 'findAllFiltered').resolves({ status: 'SUCCESSFUL', data: [{ id: 1, name: 'Martelo de Thor' }] });
+    
+    const req = { query: { q: 'Mar' } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+    
+    await productsController.findAllFiltered(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith([
+      {
+        id: 1,
+        name: 'Martelo de Thor',
+      },
+    ]);
+  });
+
   afterEach(function () {
     sinon.restore();
   });

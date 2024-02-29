@@ -10,6 +10,8 @@ const {
   productIdFromDB,
   productIdFromModel,
   returnFromDB,
+  productFromSalesProducts,
+  productWithDate,
 } = require('../mocks/products.mock');
 
 describe('Realizando testes - PRODUCTS MODEL:', function () {
@@ -29,6 +31,26 @@ describe('Realizando testes - PRODUCTS MODEL:', function () {
     const product = await productsModel.findById(inputData);
     expect(product).to.be.an('object');
     expect(product).to.be.deep.equal(productFromModel);
+  });
+
+  it('Listar produto na tabela sales_products pelo id com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([[productFromSalesProducts]]);
+    
+    const saleId = 1;
+    const productId = 2;
+    const product = await productsModel.findProductByIdInSalesProduct(saleId, productId);
+    expect(product).to.be.an('object');
+    expect(product).to.be.deep.equal(productFromSalesProducts);
+  });
+
+  it('Listar produto na tabela sales_products pelo id incluindo a data da sua compra com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([[productWithDate]]);
+    
+    const saleId = 1;
+    const productId = 2;
+    const product = await productsModel.findProductWithDate(saleId, productId);
+    expect(product).to.be.an('object');
+    expect(product).to.be.deep.equal(productWithDate);
   });
 
   it('Cadastrar produto com sucesso', async function () {
@@ -58,6 +80,33 @@ describe('Realizando testes - PRODUCTS MODEL:', function () {
 
     expect(result[0].affectedRows).to.be.equal(1);
     expect(result[0].changedRows).to.be.equal(1);
+  });
+
+  it('Listar todos produtos filtrados pela query "Mar" com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([[{ id: 1, name: 'Martelo de Thor' }]]);
+    const inputFilter = 'Mar';
+    const products = await productsModel.findAllFiltered(inputFilter);
+    expect(products).to.be.an('array');
+    expect(products).to.have.lengthOf(1);
+    expect(products).to.be.deep.equal([{ id: 1, name: 'Martelo de Thor' }]);
+  });
+
+  it('Listar todos produtos filtrados pela query vazia com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([productsFromModel]);
+    const inputFilter = '';
+    const products = await productsModel.findAllFiltered(inputFilter);
+    expect(products).to.be.an('array');
+    expect(products).to.have.lengthOf(2);
+    expect(products).to.be.deep.equal(productsFromModel);
+  });
+
+  it('Listar todos produtos filtrados pela query "Produto Inexistente" com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([[]]);
+    const inputFilter = undefined;
+    const products = await productsModel.findAllFiltered(inputFilter);
+    expect(products).to.be.an('array');
+    expect(products).to.have.lengthOf(0);
+    expect(products).to.be.deep.equal([]);
   });
 
   afterEach(function () {

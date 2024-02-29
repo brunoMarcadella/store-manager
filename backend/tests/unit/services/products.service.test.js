@@ -9,6 +9,7 @@ const {
   newProductFromModel,
   updatedProduct,
   productFromDB,
+  productsFromDB,
 } = require('../mocks/products.mock');
 
 describe('Realizando testes - PRODUCTS SERVICE:', function () {
@@ -125,6 +126,42 @@ describe('Realizando testes - PRODUCTS SERVICE:', function () {
     expect(responseService.status).to.be.equal('NOT_FOUND');
     expect(responseService.data.message).to.be.a('string');
     expect(responseService.data.message).to.be.equal('Product not found');
+  });
+
+  it('Listar todos produtos filtrados pela query "Mar" com sucesso', async function () {
+    sinon.stub(productsModel, 'findAllFiltered').resolves([{ id: 1, name: 'Martelo de Thor' }]);
+    const inputFilter = 'Mar'; 
+
+    const responseService = await productsService.findAllFiltered(inputFilter);
+
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.an('array');
+    expect(responseService.data).to.have.lengthOf(1);
+    expect(responseService.data).to.be.deep.equal([{ id: 1, name: 'Martelo de Thor' }]);
+  });
+
+  it('Listar todos produtos filtrados pela query vazia com sucesso', async function () {
+    sinon.stub(productsModel, 'findAllFiltered').resolves(productsFromDB);
+    const inputFilter = undefined; 
+
+    const responseService = await productsService.findAllFiltered(inputFilter);
+
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.an('array');
+    expect(responseService.data).to.have.lengthOf(2);
+    expect(responseService.data).to.be.deep.equal(productsFromModel);
+  });
+
+  it('Listar todos produtos filtrados pela query "Produto Inexistente" com sucesso', async function () {
+    sinon.stub(productsModel, 'findAllFiltered').resolves([]);
+    const inputFilter = 'Produto Inexistente'; 
+
+    const responseService = await productsService.findAllFiltered(inputFilter);
+
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.an('array');
+    expect(responseService.data).to.have.lengthOf(0);
+    expect(responseService.data).to.be.deep.equal([]);
   });
 
   afterEach(function () {

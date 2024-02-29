@@ -30,6 +30,12 @@ const productFromModel = {
   name: 'Martelo de Thor',
 };
 
+const productFromSalesProducts = {
+  saleId: 1,
+  productId: 2,
+  quantity: 5,
+};
+
 const productsFromServiceSuccessful = {
   status: 'SUCCESSFUL',
   data: productsFromModel,
@@ -84,6 +90,13 @@ const returnFromDB = [
 
 const deleteProductSuccessful = { status: 'NO_CONTENT', data: {} };
 
+const productWithDate = {
+  date: '2023-05-06T03:14:28.000Z',
+  productId: 2,
+  quantity: 20,
+  saleId: 1,
+};
+
 module.exports = {
   productsFromDB,
   productsFromModel,
@@ -100,4 +113,6 @@ module.exports = {
   updateProductFromServiceSuccessful,
   returnFromDB,
   deleteProductSuccessful,
+  productFromSalesProducts,
+  productWithDate,
 };
