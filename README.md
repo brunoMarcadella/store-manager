@@ -42,13 +42,23 @@ npm install
 
 ## Endpoints
 * GET /products -> retorna todos os produtos ordenados de forma crescente pelo id;
+  
 * GET /products/:id -> retorna o produto com o id presente na URL;
+  
 * GET /sales -> retorna todas as vendas ordenadas de forma crescente pelo saleId e se houver empate pelo pŕoductId;
+  
 * GET /sales/:id -> retorna a venda com o id presente na URL;
+  
 * POST /products -> salva o produto enviado na tabela "products", sendo necessário enviar o "name" do produto com pelo menos 5 caracteres;
+  
 * POST /sales -> salva as vendas nas tabelas sales e sales_products sendo necessário enviar o "productId" do produto vendido e a sua quantity" vendida;
+  
 * PUT /products/:id -> atualiza o "name" do produto com o id presente n URL;
+  
 * DELETE /products/:id -> deleta o produto com o id presente na URL;
+  
 * DELETE /sales/:id -> deleta a venda com o id presente na URL;
+  
 * PUT /sales/:saleId/products/:productId/quantity -> atualiza a quantidade de um produto (productId) em uma venda (saleId) através do corpo da requisição com o parâmetro "quantity";
+  
 * GET /products/search -> pesquisa por um produto que tenha o mesmo valor em "name" que o valor da query "q", por exemplo, ao pesquisar /products/search?q=Martelo o produto com o "name" igual a Martelo é retornado.
