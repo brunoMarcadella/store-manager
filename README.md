@@ -6,7 +6,7 @@ Este projeto trata-se de uma API RESTful desenvolvida em arquitetura em camadas 
 ## Técnologias usadas
 
 Back-end:
-> Desenvolvido usando: Docker, MySQL
+> Desenvolvido usando: Docker, MySQL e Testes com Mocha, Chai e Sinon.
 
 
 ## Instalando Dependências
