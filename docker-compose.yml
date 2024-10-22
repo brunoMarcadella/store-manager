@@ -23,8 +23,8 @@ services:
     image: mysql:8.0.32
     container_name: store_manager_db
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: StoreManager
+      MYSQL_ROOT_PASSWORD: fkmTWAXSTAsVFVePGaTZUQHfVROmomjq
+      MYSQL_DATABASE: railway
     ports:
       - 3306:3306
     healthcheck:
