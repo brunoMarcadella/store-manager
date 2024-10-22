@@ -12,9 +12,9 @@ services:
       - ./backend/tests:/app/tests
     environment:
       MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_HOSTNAME: db
-      MYSQL_PORT: 3306
+      MYSQL_PASSWORD: fkmTWAXSTAsVFVePGaTZUQHfVROmomjq
+      MYSQL_HOSTNAME: mysql.railway.internal
+      MYSQL_PORT: 40224
       PORT: 3001
     depends_on:
       db:
