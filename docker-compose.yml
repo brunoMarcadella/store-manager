@@ -14,7 +14,7 @@ services:
       MYSQLUSER: root
       MYSQLPASSWORD: fkmTWAXSTAsVFVePGaTZUQHfVROmomjq
       MYSQLHOST: mysql.railway.internal
-      MYSQLPORT: 40224
+      MYSQLPORT: 3306
       PORT: 3001
     depends_on:
       db:
