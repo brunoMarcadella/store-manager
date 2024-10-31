@@ -51,9 +51,9 @@ npm install
   
 * POST /products -> salva o produto enviado na tabela "products", sendo necessário enviar o "name" do produto com pelo menos 5 caracteres;
   
-* POST /sales -> salva as vendas nas tabelas sales e sales_products sendo necessário enviar o "productId" do produto vendido e a sua quantity" vendida;
+* POST /sales -> salva as vendas nas tabelas sales e sales_products sendo necessário enviar o "productId" do produto vendido e a sua "quantity" vendida;
   
-* PUT /products/:id -> atualiza o "name" do produto com o id presente n URL;
+* PUT /products/:id -> atualiza o "name" do produto com o id presente na URL;
   
 * DELETE /products/:id -> deleta o produto com o id presente na URL;
   
